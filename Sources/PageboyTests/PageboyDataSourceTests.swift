@@ -43,8 +43,15 @@ class PageboyDataSourceTests: PageboyTests {
         self.dataSource.numberOfPages = 3
         self.pageboyViewController.dataSource = self.dataSource
         
-        XCTAssert(self.pageboyViewController.currentIndex == 0,
-                  "Default Page index is not using correct .first PageIndex when no value is returned.")
+        let expectation = XCTestExpectation(description: "Default page index is correct.")
+        let waitTime = 0.1
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + waitTime) {
+            XCTAssert(self.pageboyViewController.currentIndex == 0,
+                      "Default Page index is not using correct .first PageIndex when no value is returned.")
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: waitTime * 2)
     }
     
     /// Test using a custom PageIndex when returned
@@ -54,8 +61,15 @@ class PageboyDataSourceTests: PageboyTests {
         self.dataSource.defaultIndex = .at(index: 1)
         self.pageboyViewController.dataSource = self.dataSource
         
-        XCTAssert(self.pageboyViewController.currentIndex == 1,
-                  "Default page index is not using correct index when specified.")
+        let expectation = XCTestExpectation(description: "Default page index is correct when specified.")
+        let waitTime = 0.1
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + waitTime) {
+            XCTAssert(self.pageboyViewController.currentIndex == 1,
+                      "Default page index is not using correct index when specified.")
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: waitTime * 2)
     }
     
     /// Test using a custom out of range PageIndex when returned
@@ -76,8 +90,15 @@ class PageboyDataSourceTests: PageboyTests {
         self.dataSource.defaultIndex = .next
         self.pageboyViewController.dataSource = self.dataSource
         
-        XCTAssert(self.pageboyViewController.currentIndex == 0,
-                  "Default page index is not correctly handling an invalid index specified.")
+        let expectation = XCTestExpectation(description: "Default page index is correct when invalid index specified.")
+        let waitTime = 0.1
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + waitTime) {
+            XCTAssert(self.pageboyViewController.currentIndex == 0,
+                      "Default page index is not correctly handling an invalid index specified.")
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: waitTime * 2)
     }
     
     /// Test using .first PageIndex when returned
@@ -87,8 +108,15 @@ class PageboyDataSourceTests: PageboyTests {
         self.dataSource.defaultIndex = .first
         self.pageboyViewController.dataSource = self.dataSource
         
-        XCTAssert(self.pageboyViewController.currentIndex == 0,
-                  "Default Page index is not using correct .first PageIndex when specified.")
+        let expectation = XCTestExpectation(description: "Default page index is correct when using .first.")
+        let waitTime = 0.1
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + waitTime) {
+            XCTAssert(self.pageboyViewController.currentIndex == 0,
+                      "Default Page index is not using correct .first PageIndex when specified.")
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: waitTime * 2)
     }
     
     /// Test using .last PageIndex when returned
@@ -98,8 +126,15 @@ class PageboyDataSourceTests: PageboyTests {
         self.dataSource.defaultIndex = .last
         self.pageboyViewController.dataSource = self.dataSource
         
-        XCTAssert(self.pageboyViewController.currentIndex == 2,
-                  "Default Page index is not using correct .last PageIndex when specified.")
+        let expectation = XCTestExpectation(description: "Default page index is correct when using .last.")
+        let waitTime = 0.1
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + waitTime) {
+            XCTAssert(self.pageboyViewController.currentIndex == 2,
+                      "Default Page index is not using correct .last PageIndex when specified.")
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: waitTime * 2)
     }
     
     /// Test whether reloadPages fully reloads 
@@ -126,10 +161,17 @@ class PageboyDataSourceTests: PageboyTests {
         self.dataSource.numberOfPages = 3
         self.pageboyViewController.reloadData()
         
-        let reloadPageCount = self.delegate.lastDidReloadPageCount
+        let expectation = XCTestExpectation(description: "reloadPages calls didReloadViewControllers")
+        let waitTime = 0.1
         
-        XCTAssertTrue(reloadPageCount == 3,
-                      "reloadPages does not call didReloadViewControllers delegate function.")
+        DispatchQueue.main.asyncAfter(deadline: .now() + waitTime) {
+            let reloadPageCount = self.delegate.lastDidReloadPageCount
+            
+            XCTAssertTrue(reloadPageCount == 3,
+                          "reloadPages does not call didReloadViewControllers delegate function.")
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: waitTime * 2)
     }
     
     /// Test that reloadCurrentPageSoftly does not cause a data source reload.
@@ -139,8 +181,15 @@ class PageboyDataSourceTests: PageboyTests {
         
         self.pageboyViewController.isInfiniteScrollEnabled = true
         
-        XCTAssertTrue(self.delegate.reloadCount == 1,
-                      "reloadCurrentPageSoftly causes the data source to reload")
+        let expectation = XCTestExpectation(description: "reloadCurrentPageSoftly doesn't reload data source")
+        let waitTime = 0.1
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + waitTime) {
+            XCTAssertTrue(self.delegate.reloadCount == 1,
+                          "reloadCurrentPageSoftly causes the data source to reload")
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: waitTime * 2)
     }
     
     /// Test that the UIPageViewController data source is 
@@ -149,12 +198,19 @@ class PageboyDataSourceTests: PageboyTests {
         self.dataSource.numberOfPages = 3
         self.pageboyViewController.dataSource = self.dataSource
         
-        let viewController = self.dataSource.viewControllers![0]
-        let nextViewController = self.pageboyViewController.pageViewController(self.pageboyViewController.pageViewController!,
-                                                                               viewControllerAfter: viewController)
+        let expectation = XCTestExpectation(description: "pageViewController:viewControllerAfter is correct")
+        let waitTime = 0.1
         
-        XCTAssert(nextViewController === self.dataSource.viewControllers?[1],
-                  "pageViewController:viewControllerAfter is returning an incorrect view controller")
+        DispatchQueue.main.asyncAfter(deadline: .now() + waitTime) {
+            let viewController = self.dataSource.viewControllers![0]
+            let nextViewController = self.pageboyViewController.pageViewController(self.pageboyViewController.pageViewController!,
+                                                                                   viewControllerAfter: viewController)
+            
+            XCTAssert(nextViewController === self.dataSource.viewControllers?[1],
+                      "pageViewController:viewControllerAfter is returning an incorrect view controller")
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: waitTime * 2)
     }
     
     /// Test that the UIPageViewController data source is
@@ -179,12 +235,19 @@ class PageboyDataSourceTests: PageboyTests {
         self.dataSource.defaultIndex = .at(index: 1)
         self.pageboyViewController.dataSource = self.dataSource
         
-        let viewController = self.dataSource.viewControllers![1]
-        let previousViewController = self.pageboyViewController.pageViewController(self.pageboyViewController.pageViewController!,
-                                                                               viewControllerBefore: viewController)
+        let expectation = XCTestExpectation(description: "pageViewController:viewControllerBefore is correct")
+        let waitTime = 0.1
         
-        XCTAssert(previousViewController === self.dataSource.viewControllers?[0],
-                  "pageViewController:viewControllerBefore is returning an incorrect view controller")
+        DispatchQueue.main.asyncAfter(deadline: .now() + waitTime) {
+            let viewController = self.dataSource.viewControllers![1]
+            let previousViewController = self.pageboyViewController.pageViewController(self.pageboyViewController.pageViewController!,
+                                                                                       viewControllerBefore: viewController)
+            
+            XCTAssert(previousViewController === self.dataSource.viewControllers?[0],
+                      "pageViewController:viewControllerBefore is returning an incorrect view controller")
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: waitTime * 2)
     }
     
     /// Test that the UIPageViewController data source is

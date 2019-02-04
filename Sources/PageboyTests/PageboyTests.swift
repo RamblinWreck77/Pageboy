@@ -39,7 +39,7 @@ class PageboyTests: XCTestCase {
     
     // MARK: Tests
     
-    private func testInit() {
+    func testInitialization() {
         XCTAssert(pageboyViewController != nil,
                   "PageBoyViewController initialization failed")
     }
