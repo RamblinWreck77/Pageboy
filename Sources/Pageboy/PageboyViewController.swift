@@ -371,7 +371,6 @@ public extension PageboyViewController {
                                   to: rawIndex,
                                   direction: direction,
                                   animated: animated,
-                                  async: true,
                                   force: force,
                                   completion: transitionCompletion)
 

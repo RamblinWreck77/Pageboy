@@ -38,7 +38,7 @@ public extension PageboyViewController {
                 return
         }
         
-        updateViewControllers(to: [viewController], animated: false, async: false, force: false) { [weak self] _ in
+        updateViewControllers(to: [viewController], animated: false, force: false) { [weak self] _ in
             self?.currentIndex = defaultIndex
             if let self = self {
                 self.delegate?.pageboyViewController(self,
@@ -59,7 +59,6 @@ public extension PageboyViewController {
 
         updateViewControllers(to: [currentViewController],
                               animated: false,
-                              async: false,
                               force: false,
                               completion: nil)
     }
@@ -73,7 +72,6 @@ internal extension PageboyViewController {
                                to toIndex: PageIndex = 0,
                                direction: NavigationDirection = .forward,
                                animated: Bool,
-                               async: Bool,
                                force: Bool,
                                completion: TransitionOperation.Completion?) {
         guard let pageViewController = pageViewController else {
@@ -98,7 +96,7 @@ internal extension PageboyViewController {
         
         // if not using a custom transition then animate using UIPageViewController mechanism
         let animateUpdate = animated ? !isUsingCustomTransition : false
-        let updateBlock = { [weak self] in
+        let update = { [weak self] in
             guard let self = self else {
                 return
             }
@@ -117,12 +115,8 @@ internal extension PageboyViewController {
         
         // Attempt to fix issue where fast scrolling causes crash.
         // See https://github.com/uias/Pageboy/issues/140
-        if async {
-            DispatchQueue.main.async {
-                updateBlock()
-            }
-        } else {
-            updateBlock()
+        DispatchQueue.main.async {
+            update()
         }
     }
 }
